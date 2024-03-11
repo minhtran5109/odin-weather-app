@@ -25,21 +25,33 @@ async function processJsonData(data) {
 }
 
 async function getWeatherData(location) {
-  try {
-    const response = await fetch(
-      `${basedAPI}/current.json?key=${API_KEY}&q=${location}`
-    );
-    const weatherData = await processJsonData(response);
-    console.log(weatherData);
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await fetch(
+    `${basedAPI}/current.json?key=${API_KEY}&q=${location}`
+  );
+  const weatherData = await processJsonData(response);
+  return weatherData;
+  // console.log(error);
+}
+
+function render(data) {
+  const content = document.getElementById("content");
+  const location = data.locationData;
+  const weatherData = data.currentWeather;
+  const temperature = weatherData.temp_c;
+  content.innerHTML = `
+    <div>${location.name}, ${location.country}</div>
+    <div>Local time: ${location.localTime}</div>
+    <img src="https:${weatherData.condition.icon}">
+    <div>${temperature}&deg</div>
+  `;
 }
 
 const search = document.getElementById("search");
 const searchBtn = document.getElementById("search-weather");
-
-searchBtn.addEventListener("click", () => {
+let weatherData = {};
+searchBtn.addEventListener("click", async () => {
   const searchTerm = search.value ? search.value : "Sydney";
-  getWeatherData(searchTerm);
+  weatherData = await getWeatherData(searchTerm);
+  console.log(weatherData);
+  render(weatherData);
 });
