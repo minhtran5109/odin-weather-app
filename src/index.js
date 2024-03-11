@@ -1,4 +1,5 @@
 import "./style.css";
+import toggleSwitch from "./toggleSwitch";
 
 const API_KEY = "3253784739874ed798940459240803";
 const basedAPI = "http://api.weatherapi.com/v1";
@@ -33,22 +34,39 @@ async function getWeatherData(location) {
   // console.log(error);
 }
 
+let isC = false;
 function render(data) {
+  document.getElementById("toggle-section").hidden = false;
   const content = document.getElementById("content");
   const location = data.locationData;
   const weatherData = data.currentWeather;
-  const temperature = weatherData.temp_c;
   content.innerHTML = `
     <div>${location.name}, ${location.country}</div>
     <div>Local time: ${location.localTime}</div>
     <img src="https:${weatherData.condition.icon}">
-    <div>${temperature}&deg</div>
+    <div id="temperature">${weatherData.temp_c}&deg</div>
   `;
+}
+let weatherData = {};
+function toggleTemp(e) {
+  isC = e.target.checked;
+  const temperatureElement = document.getElementById("temperature");
+  temperatureElement.innerHTML = "";
+  const temperature = isC
+    ? weatherData.currentWeather.temp_f
+    : weatherData.currentWeather.temp_c;
+  temperatureElement.innerHTML = `${temperature}&deg`;
+  // console.log(isC);
+}
+
+const tempToggle = document.getElementById("temp-toggle");
+if (tempToggle) {
+  tempToggle.addEventListener("change", (e) => toggleTemp(e));
 }
 
 const search = document.getElementById("search");
 const searchBtn = document.getElementById("search-weather");
-let weatherData = {};
+
 searchBtn.addEventListener("click", async () => {
   const searchTerm = search.value ? search.value : "Sydney";
   weatherData = await getWeatherData(searchTerm);
