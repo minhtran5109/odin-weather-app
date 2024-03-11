@@ -36,4 +36,10 @@ async function getWeatherData(location) {
   }
 }
 
-getWeatherData("London");
+const search = document.getElementById("search");
+const searchBtn = document.getElementById("search-weather");
+
+searchBtn.addEventListener("click", () => {
+  const searchTerm = search.value ? search.value : "Sydney";
+  getWeatherData(searchTerm);
+});
