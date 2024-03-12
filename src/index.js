@@ -1,17 +1,15 @@
 import "./style.css";
-import toggleSwitch from "./toggleSwitch";
 
 const API_KEY = "3253784739874ed798940459240803";
 const basedAPI = "http://api.weatherapi.com/v1";
 
-// default
-// let location = "London";
+let weatherData = {};
 
 async function processJsonData(data) {
   const jsonData = await data.json();
-  // console.log(jsonData);
+
   // extracting only meaningful data to user
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     resolve({
       locationData: {
         country: jsonData.location.country,
@@ -21,33 +19,43 @@ async function processJsonData(data) {
       },
       currentWeather: jsonData.current,
     });
-    reject(new Error("Something went wrong when retrieving the API"));
   });
 }
 
 async function getWeatherData(location) {
-  const response = await fetch(
-    `${basedAPI}/current.json?key=${API_KEY}&q=${location}`
-  );
-  const weatherData = await processJsonData(response);
-  return weatherData;
-  // console.log(error);
+  try {
+    const response = await fetch(
+      `${basedAPI}/current.json?key=${API_KEY}&q=${location}`
+    );
+    if (response.status >= 400 && response.status < 600) {
+      const section = document.getElementById("weather-section");
+      section.innerHTML = `Error! Location either does not exist or there was a problem when retrieving response from the server.`;
+      section.style.color = "red";
+      section.style.backgroundColor = "lightpink";
+      throw new Error("Bad response from server");
+    }
+    return processJsonData(response);
+  } catch (error) {
+    console.log(error);
+  }
+  return undefined;
 }
 
 let isC = false;
 function render(data) {
   document.getElementById("toggle-section").hidden = false;
-  const content = document.getElementById("content");
   const location = data.locationData;
-  const weatherData = data.currentWeather;
+  const weather = data.currentWeather;
+
+  const content = document.getElementById("content");
   content.innerHTML = `
     <div>${location.name}, ${location.country}</div>
     <div>Local time: ${location.localTime}</div>
-    <img src="https:${weatherData.condition.icon}">
-    <div id="temperature">${weatherData.temp_c}&deg</div>
+    <img src="https:${weather.condition.icon}">
+    <div id="temperature">${weather.temp_c}&deg</div>
   `;
 }
-let weatherData = {};
+
 function toggleTemp(e) {
   isC = e.target.checked;
   const temperatureElement = document.getElementById("temperature");
@@ -56,7 +64,6 @@ function toggleTemp(e) {
     ? weatherData.currentWeather.temp_f
     : weatherData.currentWeather.temp_c;
   temperatureElement.innerHTML = `${temperature}&deg`;
-  // console.log(isC);
 }
 
 const tempToggle = document.getElementById("temp-toggle");
@@ -71,5 +78,5 @@ searchBtn.addEventListener("click", async () => {
   const searchTerm = search.value ? search.value : "Sydney";
   weatherData = await getWeatherData(searchTerm);
   console.log(weatherData);
-  render(weatherData);
+  if (weatherData) render(weatherData);
 });
