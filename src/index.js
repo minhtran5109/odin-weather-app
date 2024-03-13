@@ -51,7 +51,6 @@ function render(data) {
   const location = data.locationData;
   const weather = data.currentWeather;
   weatherSection.innerHTML = `
-    <div id="loader" style="display: none">Loading...</div>
       <div id="toggle-section">
         C
         <label class="switch">
@@ -90,8 +89,9 @@ const loader = document.getElementById("loader");
 
 searchBtn.addEventListener("click", async () => {
   const searchTerm = search.value ? search.value : "Sydney";
-
+  loader.style.display = "block";
   weatherData = await getWeatherData(searchTerm);
+  loader.style.display = "none";
   console.log(weatherData);
   if (weatherData) render(weatherData);
 });
