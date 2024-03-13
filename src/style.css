@@ -63,9 +63,24 @@ body {
   margin-bottom: 20px;
 }
 
+#location {
+  font-size: 1.5rem;
+}
+
+#local-time {
+  margin-top: 5px;
+}
+
+#weather-icon {
+  position: relative;
+  top: 10px;
+  right: 10px;
+}
+
 #temperature {
   display: inline-block;
-  font-size: 5rem;
+  font-size: 3.75rem;
+  font-weight: bold;
 }
 
 .error-msg {

@@ -1,4 +1,5 @@
 import "./style.css";
+import { parse, format } from "date-fns";
 
 const API_KEY = "3253784739874ed798940459240803";
 const basedAPI = "http://api.weatherapi.com/v1";
@@ -55,15 +56,22 @@ function toggleTemp(e) {
     : weatherData.currentWeather.temp_c;
   temperatureElement.innerHTML = `${temperature}&deg`;
 }
+function processDate(data) {
+  const date = parse(data, "yyyy-MM-dd HH:mm", new Date());
+  // console.log(date);
+  // console.log(format(date, "EEEE, LLL d, HH:mm"));
+  return format(date, "EEEE, LLL d, HH:mm");
+}
 
 function render(data) {
   weatherSection.innerHTML = "";
   const location = data.locationData;
   const weather = data.currentWeather;
+  const localTime = processDate(location.localTime);
   weatherSection.innerHTML = `
     <div id="content">
       <div id="location">${location.name}, ${location.country}</div>
-      <div id="local-time">${location.localTime}</div>
+      <div id="local-time">${localTime}</div>
       <span id="weather-icon"><img src="https:${weather.condition.icon}"></span>
       <div id="temperature">${weather.temp_c}&deg</div>
     </div>
