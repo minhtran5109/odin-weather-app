@@ -62,8 +62,8 @@ function render(data) {
   const weather = data.currentWeather;
   weatherSection.innerHTML = `
     <div id="content">
-      <div>${location.name}, ${location.country}</div>
-      <div>${location.localTime}</div>
+      <div id="location">${location.name}, ${location.country}</div>
+      <div id="local-time">${location.localTime}</div>
       <span id="weather-icon"><img src="https:${weather.condition.icon}"></span>
       <div id="temperature">${weather.temp_c}&deg</div>
     </div>

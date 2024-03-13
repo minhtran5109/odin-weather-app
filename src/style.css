@@ -44,12 +44,16 @@ body {
   margin-top: 30px;
   background-color: #95c4e6;
   color: white;
-  width: 50vw;
+  width: 500px;
   border-radius: 6px;
   padding: 0 20px;
 }
 
-
+@media only screen and (max-width: 1000px) {
+  #weather-section {
+    width: 300px;
+  }
+}
 #toggle-section {
   margin-top: 20px;
 }
@@ -61,6 +65,7 @@ body {
 
 #temperature {
   display: inline-block;
+  font-size: 5rem;
 }
 
 .error-msg {
