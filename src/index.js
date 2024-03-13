@@ -61,7 +61,7 @@ function render(data) {
       </div>
       <div id="content">
         <div>${location.name}, ${location.country}</div>
-        <div>Local time: ${location.localTime}</div>
+        <div>${location.localTime}</div>
         <img src="https:${weather.condition.icon}">
         <div id="temperature">${weather.temp_c}&deg</div>
       </div>
