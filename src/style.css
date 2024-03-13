@@ -38,14 +38,18 @@ body {
 
 #weather-section {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   margin-top: 30px;
-  background-color: #7cbbe7;
+  background-color: #95c4e6;
   color: white;
   width: 50vw;
   border-radius: 6px;
+  padding: 0 20px;
 }
+
+
 #toggle-section {
   margin-top: 20px;
 }
@@ -53,6 +57,10 @@ body {
 #content {
   margin-top: 10px;
   margin-bottom: 20px;
+}
+
+#temperature {
+  display: inline-block;
 }
 
 .error-msg {

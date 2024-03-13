@@ -46,28 +46,6 @@ async function getWeatherData(location) {
 }
 
 let isC = false;
-function render(data) {
-  weatherSection.innerHTML = "";
-  const location = data.locationData;
-  const weather = data.currentWeather;
-  weatherSection.innerHTML = `
-      <div id="toggle-section">
-        C
-        <label class="switch">
-          <input id="temp-toggle" type="checkbox" unchecked>
-          <span class="slider round"></span>
-        </label>
-        F
-      </div>
-      <div id="content">
-        <div>${location.name}, ${location.country}</div>
-        <div>${location.localTime}</div>
-        <img src="https:${weather.condition.icon}">
-        <div id="temperature">${weather.temp_c}&deg</div>
-      </div>
-  `;
-}
-
 function toggleTemp(e) {
   isC = e.target.checked;
   const temperatureElement = document.getElementById("temperature");
@@ -78,9 +56,40 @@ function toggleTemp(e) {
   temperatureElement.innerHTML = `${temperature}&deg`;
 }
 
+function render(data) {
+  weatherSection.innerHTML = "";
+  const location = data.locationData;
+  const weather = data.currentWeather;
+  weatherSection.innerHTML = `
+    <div id="content">
+      <div>${location.name}, ${location.country}</div>
+      <div>${location.localTime}</div>
+      <span id="weather-icon"><img src="https:${weather.condition.icon}"></span>
+      <div id="temperature">${weather.temp_c}&deg</div>
+    </div>
+
+    <div id="toggle-section">
+      C
+      <label class="switch">
+        <input id="temp-toggle" type="checkbox" unchecked>
+        <span class="slider round"></span>
+      </label>
+      F
+    </div>
+  `;
+  const tempToggle = document.getElementById("temp-toggle");
+  if (tempToggle) {
+    tempToggle.addEventListener("change", (e) => {
+      toggleTemp(e);
+    });
+  }
+}
+
 const tempToggle = document.getElementById("temp-toggle");
 if (tempToggle) {
-  tempToggle.addEventListener("change", (e) => toggleTemp(e));
+  tempToggle.addEventListener("change", (e) => {
+    toggleTemp(e);
+  });
 }
 
 const search = document.getElementById("search");
