@@ -22,16 +22,20 @@ async function processJsonData(data) {
   });
 }
 
+const weatherSection = document.getElementById("weather-section");
+
 async function getWeatherData(location) {
   try {
     const response = await fetch(
       `${basedAPI}/current.json?key=${API_KEY}&q=${location}`
     );
     if (response.status >= 400 && response.status < 600) {
-      const section = document.getElementById("weather-section");
-      section.innerHTML = `Error! Location either does not exist or there was a problem when retrieving response from the server.`;
-      section.style.color = "red";
-      section.style.backgroundColor = "lightpink";
+      weatherSection.innerHTML = "";
+      const errorMsg = document.createElement("div");
+      errorMsg.classList.add("error-msg");
+      errorMsg.innerText =
+        "Error! Location either does not exist or there was a problem when retrieving response from the server.";
+      weatherSection.appendChild(errorMsg);
       throw new Error("Bad response from server");
     }
     return processJsonData(response);
@@ -43,16 +47,25 @@ async function getWeatherData(location) {
 
 let isC = false;
 function render(data) {
-  document.getElementById("toggle-section").hidden = false;
+  weatherSection.innerHTML = "";
   const location = data.locationData;
   const weather = data.currentWeather;
-
-  const content = document.getElementById("content");
-  content.innerHTML = `
-    <div>${location.name}, ${location.country}</div>
-    <div>Local time: ${location.localTime}</div>
-    <img src="https:${weather.condition.icon}">
-    <div id="temperature">${weather.temp_c}&deg</div>
+  weatherSection.innerHTML = `
+    <div id="loader" style="display: none">Loading...</div>
+      <div id="toggle-section">
+        C
+        <label class="switch">
+          <input id="temp-toggle" type="checkbox" unchecked>
+          <span class="slider round"></span>
+        </label>
+        F
+      </div>
+      <div id="content">
+        <div>${location.name}, ${location.country}</div>
+        <div>Local time: ${location.localTime}</div>
+        <img src="https:${weather.condition.icon}">
+        <div id="temperature">${weather.temp_c}&deg</div>
+      </div>
   `;
 }
 
@@ -73,9 +86,11 @@ if (tempToggle) {
 
 const search = document.getElementById("search");
 const searchBtn = document.getElementById("search-weather");
+const loader = document.getElementById("loader");
 
 searchBtn.addEventListener("click", async () => {
   const searchTerm = search.value ? search.value : "Sydney";
+
   weatherData = await getWeatherData(searchTerm);
   console.log(weatherData);
   if (weatherData) render(weatherData);
