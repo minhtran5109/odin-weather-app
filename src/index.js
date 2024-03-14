@@ -74,6 +74,7 @@ function render(data) {
       <div id="local-time">${localTime}</div>
       <span id="weather-icon"><img src="https:${weather.condition.icon}"></span>
       <div id="temperature">${weather.temp_c}&deg</div>
+      <div id="description">${weather.condition.text}</div>
     </div>
 
     <div id="toggle-section">
