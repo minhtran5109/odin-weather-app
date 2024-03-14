@@ -86,6 +86,8 @@ function render(data) {
       F
     </div>
   `;
+  weatherSection.style.backgroundColor =
+    weather.is_day === 1 ? "#95c4e6" : "#313165";
   const tempToggle = document.getElementById("temp-toggle");
   if (tempToggle) {
     tempToggle.addEventListener("change", (e) => {
